@@ -220,10 +220,6 @@ export default class View extends React.Component {
                 // note the `bg-white class here is necessary to obscure the other layer
                 <div
                   className="spread bg-white scroll-y z2 border-top border-bottom"
-                  style={{
-                    // opacity: 1,
-                    transform: `translateY(-100%)`,
-                  }}
                 >
                   <Notebook {...this.props} />
                 </div>
