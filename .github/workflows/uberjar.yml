@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - '**-qed'
+      - '0.37-qed'
       - 'release-**'
     tags:
       - '**'
