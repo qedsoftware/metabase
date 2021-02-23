@@ -5,7 +5,7 @@ set -e
 BASEDIR=$(dirname $0)
 PROJECT_ROOT="$BASEDIR/../.."
 
-DOCKERHUB_NAMESPACE=metabase
+DOCKERHUB_NAMESPACE=qeddockerhub
 
 if [ ! -z "$MB_EDITION" ] && [ "$MB_EDITION" != ee ] && [ "$MB_EDITION" != oss ]; then
     echo "MB_EDITION must be either 'ee' or 'oss'."
@@ -32,19 +32,19 @@ if [ "$4" == "--latest" ]; then
     LATEST="YES"
 fi
 
-if [ "$PUBLISH" == "YES" ] && [ -z "$DOCKERHUB_USERNAME" -o -z "$DOCKERHUB_PASSWORD" ]; then
-    echo "In order to publish an image to Dockerhub you must set \$DOCKERHUB_USERNAME and \$DOCKERHUB_PASSWORD before running."
-    exit 1
-fi
+#if [ "$PUBLISH" == "YES" ] && [ -z "$DOCKERHUB_USERNAME" -o -z "$DOCKERHUB_PASSWORD" ]; then
+#    echo "In order to publish an image to Dockerhub you must set \$DOCKERHUB_USERNAME and \$DOCKERHUB_PASSWORD before running."
+#    exit 1
+#fi
 
 # TODO: verify we have access to docker cmd and minimum version?
 
 
 if [ "$BUILD_TYPE" == "release" ]; then
     if [ "$MB_EDITION" = ee ]; then
-        DOCKERHUB_REPO=metabase-enterprise
+        DOCKERHUB_REPOSITORY=metabase-enterprise
     else
-        DOCKERHUB_REPO=metabase
+        DOCKERHUB_REPOSITORY=metabase
     fi
 
     DOCKER_IMAGE="${DOCKERHUB_NAMESPACE}/${DOCKERHUB_REPOSITORY}:${MB_TAG}"
@@ -52,12 +52,12 @@ if [ "$BUILD_TYPE" == "release" ]; then
     echo "Building Docker image ${DOCKER_IMAGE} from official Metabase release ${MB_TAG}"
 
     # download the official version of Metabase which matches our tag
-    curl -L -f -o ${BASEDIR}/metabase.jar https://downloads.metabase.com/enterprise/${MB_TAG}/metabase.jar
+    #curl -L -f -o ${BASEDIR}/metabase.jar https://downloads.metabase.com/enterprise/${MB_TAG}/metabase.jar
 
-    if [[ $? -ne 0 ]]; then
-        echo "Download failed!"
-        exit 1
-    fi
+#    if [[ $? -ne 0 ]]; then
+#        echo "Download failed!"
+#        exit 1
+#    fi
 else
     DOCKERHUB_REPOSITORY=metabase-head
     DOCKER_IMAGE="${DOCKERHUB_NAMESPACE}/${DOCKERHUB_REPOSITORY}:${MB_TAG}"
@@ -88,7 +88,8 @@ if [ "$PUBLISH" == "YES" ]; then
     echo "Publishing image ${DOCKER_IMAGE} to Dockerhub"
 
     # make sure that we are logged into dockerhub
-    docker login --username="${DOCKERHUB_USERNAME}" --password="${DOCKERHUB_PASSWORD}"
+
+    #docker login --username="${DOCKERHUB_USERNAME}" --password="${DOCKERHUB_PASSWORD}"
 
     # push the built image to dockerhub
     docker push ${DOCKER_IMAGE}
